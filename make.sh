@@ -1,0 +1,1 @@
+gcc ./draw.c -fPIC -shared -o ./libdraw.so -lX11
