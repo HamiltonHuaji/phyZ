@@ -5,7 +5,14 @@ p_y=300.0
 p_a=0.0
 v_x=0
 v_y=0
-v_a=0
+v_a=0.0000000001
+
+q_x=400.0
+q_y=300.0
+q_a=0.0
+u_x=0
+u_y=0
+u_a=0
 
 g=0
 e=0.1
@@ -34,6 +41,50 @@ b=0-d
             <x var="@v_x"></x>
             <y var="@v_y"></y>
             <a var="@v_a"></a>
+        </init_velocity>
+    </velocity>
+    <collision>
+        <point type="#near" id="%0" next="%1" enable="$True">
+            <x var="@a"></x>
+            <y var="@b"></y>
+            <a var="&0"></a>
+        </point>
+        <point type="#near" id="%1" next="%2" enable="$True">
+            <x var="@c"></x>
+            <y var="@b"></y>
+            <a var="&0"></a>
+        </point>
+        <point type="#near" id="%2" next="%3" enable="$True">
+            <x var="@c"></x>
+            <y var="@d"></y>
+            <a var="&0"></a>
+        </point>
+        <point type="#near" id="%3" next="%0" enable="$True">
+            <x var="@a"></x>
+            <y var="@d"></y>
+            <a var="&0"></a>
+        </point>
+        <point type="#away" id="%4" next="$None" enable="$True">
+            <x var="@c"></x>
+            <y var="@d"></y>
+            <a var="&0"></a>
+            <r var="&20"></r>
+        </point>
+    </collision>
+</object>
+<object type="#object" id="%2" enable="$True" moveable="$True" gravity="$True" mass="&1" interia="&1">
+    <position>
+        <init_position>
+            <x var="@q_x"></x>
+            <y var="@q_y"></y>
+            <a var="@q_a"></a>
+        </init_position>
+    </position>
+    <velocity>
+        <init_velocity>
+            <x var="@u_x"></x>
+            <y var="@u_y"></y>
+            <a var="@u_a"></a>
         </init_velocity>
     </velocity>
     <collision>

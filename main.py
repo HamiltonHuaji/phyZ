@@ -345,12 +345,14 @@ while True:
         for i in objs:
             objs[i].DRAW(x11)
     if Time>=30:
-        print("!")
-        print(objs[1].near_point[1].position.x)
-        print(objs[1].near_point[1].position.y)
-        objs[1].velocity=hit(objs[1].mass,objs[1].interia,"agg",TwoVec(x=0,y=1,a=0),objs[1].near_point[1].position,objs[1].position,objs[1].velocity)
-        print(objs[1].velocity.a)
-        print(objs[1].position.a)
+        for i in objs:
+            print("!")
+            print(objs[i].near_point[i].position.x)
+            print(objs[i].near_point[i].position.y)
+            objs[i].velocity=hit(objs[i].mass,objs[i].interia,"agg",TwoVec(x=0,y=0,a=1),objs[1].near_point[i].position,objs[i].position,objs[i].velocity)
+            print(objs[i].velocity.a)
+            print(objs[i].position.a)
+            #debugging
         Time=0
         # time.sleep(3)
         # del ncurses
