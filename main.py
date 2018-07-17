@@ -335,7 +335,7 @@ while True:
                 if objs[i].near_point[p].touching==False:
                     objs[i].near_point[p].touching=True
                     objs[i].DRAW(x11)
-                    print(str(objs[i].velocity.y))
+                    print(str(objs[i].get_near_position(p).y))
                     objs[i].velocity=hit(objs[i].mass,objs[i].interia,"agg",TwoVec(x=0,y=NSolve(lambda iy:hit(objs[i].mass,objs[i].interia,"agg",TwoVec(x=0,y=iy,a=0),objs[i].near_point[p].position,objs[i].position,objs[i].velocity).y,-e*objs[i].get_near_velocity(p).y,0.000001),a=0),objs[i].near_point[p].position,objs[i].position,objs[i].velocity)
                     draw_rate=500
             else:

@@ -1,1 +1,1 @@
-DISPLAY=:0 ./main.py ./libdraw.so ./libcurses.so ./objects.xml
+./main.py ./libdraw.so ./libcurses.so ./objects.xml
