@@ -1,13 +1,13 @@
 <init_value>
 print("In init_value")
-p_x=200.0
+p_x=100.0
 p_y=300.0
-p_a=1.0
-v_x=20
-v_y=50
-v_a=1
+p_a=0.0
+v_x=0
+v_y=0
+v_a=0
 
-g=10
+g=0
 e=0.1
 c=60
 d=80
@@ -15,9 +15,13 @@ a=0-c
 b=0-d
 </init_value>
 <screen width="%810" height="%540"></screen>
+<functions>
+</functions>
+<trigers>
+</trigers>
 <object type="#line" id="%0" enable="$True">
 </object>
-<object type="#object" id="%1" enable="$True" moveable="$True" gravity="$True" mass="&1" interia="&100">
+<object type="#object" id="%1" enable="$True" moveable="$True" gravity="$True" mass="&1" interia="&1">
     <position>
         <init_position>
             <x var="@p_x"></x>

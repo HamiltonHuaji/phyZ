@@ -21,6 +21,7 @@ from classes import dummy as dummy
 from classes import PANIC as PANIC
 from classes import NSolve_Cut as NSolve
 from classes import TwoVec as TwoVec
+from classes import Ncurses as Ncurses
 from classes import str2bool as str2bool
 
 NAM=locals()
@@ -101,7 +102,7 @@ class Point:
         self._next=None
         self._enable=None
         self._r=None
-        
+        self.touching=False
         self.position=TwoVec()
         self.id=None
         self.next=None
@@ -134,11 +135,13 @@ def hit(mass,interia,mode,i_,_r,p,v):
     impuse=None
     delta=None
     def _hit(mass,interia,_i,_r):
-        return TwoVec(_i.x/mass,_i.y/mass,(_i.y*_r.x-_i.x*_r.y)/interia)
+        #print((_i.y*_r.x-_i.x*_r.y)/interia)
+        # num=1/0
+        return TwoVec(x=_i.x/mass,y=_i.y/mass,a=(_i.y*_r.x-_i.x*_r.y+_i.a)/interia)
     if mode[2]=="g":
-        impuse=global_to_local(i,p.a)
+        impuse=global_to_local(i_,p.a)
     else:
-        impuse=i
+        impuse=i_
     delta=_hit(mass,interia,impuse,_r)
     if mode[0]=="d":
         if mode[1]=="l":
@@ -293,15 +296,17 @@ def force(self):
 args = sys.argv[:]
 argc = len(args)
 #init xml and x11
-with open(args[2],'r',encoding="utf-8") as f:
-    xml=f.read()
+f=open(args[3],'r',encoding="utf-8")
+xml=f.read()
+f.close()
 xml_main=BeautifulSoup(xml,"html5lib")
 screen=xml_main.screen
 x11=X11(args[1],varType(screen["width"]).var(),varType(screen["height"]).var())
+# ncurses=Ncurses(args[2])
 xml_objects=xml_main.find_all("object",{"type":"#object"})
 #init objects and points
 objs={}
-ids =[]
+
 for xml_object in xml_objects:
     objs[Read(xml_object["id"])]=Object(xml_object)
 exec(xml_main.init_value.string)
@@ -311,26 +316,45 @@ for i in objs:
     objs[i].calc_parameter()
     objs[i].calc_collision()
 #
+# ncurses.put_string(0,0,"test")
 circle      =   0
-draw_rate   =   2500
+draw_rate   =   1000
 draw_count  =   0
-delta_t     =   0.0001
+delta_t     =   0.001
 Time        =   0
 while True:
     circle      +=  1
     draw_count  +=  1
+    Time        +=  delta_t
     x11.draw_base()
     # time.sleep(0.01)
     for i in objs:
         objs[i].move(delta_t,force)
         for p in objs[i].near_point:
-            if objs[i].get_near_position(p).y<=0:
-                objs[i].DRAW(x11)
-                input("pause")
+            if (objs[i].get_near_position(p).y<=0)&(objs[i].get_near_velocity(p).y<=0):
+                if objs[i].near_point[p].touching==False:
+                    objs[i].near_point[p].touching=True
+                    objs[i].DRAW(x11)
+                    print(str(objs[i].velocity.y))
+                    objs[i].velocity=hit(objs[i].mass,objs[i].interia,"agg",TwoVec(x=0,y=NSolve(lambda iy:hit(objs[i].mass,objs[i].interia,"agg",TwoVec(x=0,y=iy,a=0),objs[i].near_point[p].position,objs[i].position,objs[i].velocity).y,-e*objs[i].get_near_velocity(p).y,0.000001),a=0),objs[i].near_point[p].position,objs[i].position,objs[i].velocity)
+                    draw_rate=100
+            else:
+                touching=False
     if draw_count>=draw_rate:
         draw_count=0
         for i in objs:
             objs[i].DRAW(x11)
+    if Time>=30:
+        print("!")
+        print(objs[1].near_point[1].position.x)
+        print(objs[1].near_point[1].position.y)
+        objs[1].velocity=hit(objs[1].mass,objs[1].interia,"agg",TwoVec(x=0,y=1,a=0),objs[1].near_point[1].position,objs[1].position,objs[1].velocity)
+        print(objs[1].velocity.a)
+        print(objs[1].position.a)
+        Time=0
+        # time.sleep(3)
+        # del ncurses
+        # os._exit(0)
 
 
 

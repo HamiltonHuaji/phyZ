@@ -1,4 +1,4 @@
-import ctypes
+from ctypes import *
 import math
 import random
 
@@ -42,7 +42,10 @@ class TwoVec:
 
 class X11:
     def __init__(self,lib,scr_width,scr_height):
-        self.so=ctypes.CDLL(lib)
+        self.so=CDLL(lib)
+        self.so.init_x11.argtypes=(c_int,c_int)
+        #or self.so.init_x11.argtypes=[c_int,c_int]
+        self.so.init_x11.restype=None
         self.so.init_x11(scr_width,scr_height)
         self.width=scr_width
         self.height=scr_height-1
@@ -69,14 +72,33 @@ class X11:
             _y_rate=more["y_rate"]
         else:
             _y_rate=1.0
-        def _y(x):
-            return _y_rate*func((max_x-min_x)*x/self.width)
+        _y=lambda x:_y_rate*func((max_x-min_x)*x/self.width)
         for x in range(0,self.width-1):
             #self.draw_dot(x,_y(x))
             self.draw_line(x,_y(x),x+1,_y(x+1))
     def __del__(self):
         self.so.close_display()
-
+class Ncurses:
+    def __init__(self,lib):
+        self.so=CDLL(lib)
+        self.so.init.argtypes=None
+        self.so.init.restype=None
+        self.so.init()
+    def put_float(self,x,y,float):
+        self.so.put_float.argtypes=(c_int,c_int,c_float)
+        self.so.put_float.restype=None
+        self.so.put_float(x,y,float)
+    def put_string(self,x,y,char):
+        this=x
+        self.so.put_char.argtypes=(c_int,c_int,c_char)
+        for i in char:
+            self.so.put_char(x+i,y,char[i])
+    # def get_key(self):
+        
+    def fresh(self):
+        self.so.fresh()
+    def __del__(self):
+        self.so.end()
 #must make sure that whatever you put in func,func can return a proper value
 #and you had better wish that func(x_1) will never be equal to func(x_2) while x_1 is not equal to x_2
 def NSolve_Cut(func,value,delta,**more):
