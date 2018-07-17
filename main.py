@@ -277,6 +277,7 @@ class Object:
 
     def DRAW(self,x11):
         this=TwoVec()
+        x11.draw_dot(self.position.x,self.position.y)
         for p in self.near_point:
             next    =   self.near_point[p].next
             x11.draw_Line(self.get_near_position(p),self.get_near_position(next))
@@ -326,9 +327,9 @@ while True:
     Time        +=  delta_t
     x11.draw_base()
     # time.sleep(0.01)
-    x11.draw_func(lambda I:hit(objs[1].mass,objs[1].interia,"agg",TwoVec(x=0,y=I,a=0),TwoVec(x=0,y=0,a=0),objs[i].position,objs[i].velocity).y,0,100)
+    #x11.draw_func(lambda I:hit(objs[1].mass,objs[1].interia,"agg",TwoVec(x=0,y=I,a=0),TwoVec(x=0,y=0,a=0),objs[i].position,objs[i].velocity).y,0,100)
     for i in objs:
-        # objs[i].move(delta_t,force)
+        objs[i].move(delta_t,force)
         for p in objs[i].near_point:
             if (objs[i].get_near_position(p).y<=0)&(objs[i].get_near_velocity(p).y<=0):
                 if objs[i].near_point[p].touching==False:
@@ -346,9 +347,9 @@ while True:
     # if Time>=30:
         # for i in objs:
             # print("!")
-            # print(objs[i].near_point[i].position.x)
-            # print(objs[i].near_point[i].position.y)
-            # objs[i].velocity=hit(objs[i].mass,objs[i].interia,"agg",TwoVec(x=0,y=1,a=1),objs[i].near_point[i].position,objs[i].position,objs[i].velocity)
+            # print(objs[1].near_point[0].position.x)
+            # print(objs[1].near_point[0].position.y)
+            # objs[1].velocity=hit(objs[1].mass,objs[1].interia,"agg",TwoVec(x=0,y=1,a=0),objs[1].near_point[2].position,objs[1].position,objs[1].velocity)
             # print(objs[i].velocity.y)
             # print(objs[i].position.a)
             # debugging
