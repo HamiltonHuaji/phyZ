@@ -131,13 +131,11 @@ def g_get_r_velocity(_r,p,v):
 def g_get_a_velocity(_r,p,v):
     return g_get_r_velocity(_r,p,v)+v
 
-def hit(mass,interia,mode,i_,_r,p,v):
+def fake_hit_and_no_one_knows_why(mass,interia,mode,i_,_r,p,v):
     impuse=None
     delta=None
-    def _hit(mass,interia,_i,_r):
-        #print((_i.y*_r.x-_i.x*_r.y)/interia)
-        # num=1/0
-        return TwoVec(x=_i.x/mass,y=_i.y/mass,a=(_i.y*_r.x-_i.x*_r.y+_i.a)/interia)
+    def _hit(mass,interia,_i,r):
+        return TwoVec(x=_i.x/mass,y=_i.y/mass,a=(_i.y*r.x-_i.x*r.y+_i.a)/interia)
     if mode[2]=="g":
         impuse=global_to_local(i_,p.a)
     else:
@@ -151,7 +149,8 @@ def hit(mass,interia,mode,i_,_r,p,v):
     else:
         return local_to_global(delta,p.a)+v
 
-
+def hit(mass,interia,mode,i,r,p,v):
+    return v+TwoVec(x=i.x/mass,y=i.y/mass,a=(i.y*r.x-i.x*r.y+i.a)/interia)
 #initial vars are functions so that they can be changed in different turns
 #moving vars are float so they need to be calculated before start, and calc_ functions should be called in __main__
 #values are functions so that they can be changed in different turns
@@ -285,7 +284,6 @@ class Object:
             this    =   self.get_away_position(p)
             this.a  =   self.away_point[p].r
             x11.draw_Arc(this)
-        x11.draw_dot(103,103)
         x11.flush()
 
 def force(self):
@@ -320,7 +318,7 @@ for i in objs:
 circle      =   0
 draw_rate   =   1000
 draw_count  =   0
-delta_t     =   0.001
+delta_t     =   0.0001
 Time        =   0
 while True:
     circle      +=  1
@@ -328,8 +326,9 @@ while True:
     Time        +=  delta_t
     x11.draw_base()
     # time.sleep(0.01)
+    x11.draw_func(lambda I:hit(objs[1].mass,objs[1].interia,"agg",TwoVec(x=0,y=I,a=0),TwoVec(x=0,y=0,a=0),objs[i].position,objs[i].velocity).y,0,100)
     for i in objs:
-        objs[i].move(delta_t,force)
+        # objs[i].move(delta_t,force)
         for p in objs[i].near_point:
             if (objs[i].get_near_position(p).y<=0)&(objs[i].get_near_velocity(p).y<=0):
                 if objs[i].near_point[p].touching==False:
@@ -337,23 +336,23 @@ while True:
                     objs[i].DRAW(x11)
                     print(str(objs[i].velocity.y))
                     objs[i].velocity=hit(objs[i].mass,objs[i].interia,"agg",TwoVec(x=0,y=NSolve(lambda iy:hit(objs[i].mass,objs[i].interia,"agg",TwoVec(x=0,y=iy,a=0),objs[i].near_point[p].position,objs[i].position,objs[i].velocity).y,-e*objs[i].get_near_velocity(p).y,0.000001),a=0),objs[i].near_point[p].position,objs[i].position,objs[i].velocity)
-                    draw_rate=100
+                    draw_rate=500
             else:
-                touching=False
+                objs[i].near_point[p].touching=False
     if draw_count>=draw_rate:
         draw_count=0
         for i in objs:
             objs[i].DRAW(x11)
-    if Time>=30:
-        for i in objs:
-            print("!")
-            print(objs[i].near_point[i].position.x)
-            print(objs[i].near_point[i].position.y)
-            objs[i].velocity=hit(objs[i].mass,objs[i].interia,"agg",TwoVec(x=0,y=0,a=1),objs[1].near_point[i].position,objs[i].position,objs[i].velocity)
-            print(objs[i].velocity.a)
-            print(objs[i].position.a)
-            #debugging
-        Time=0
+    # if Time>=30:
+        # for i in objs:
+            # print("!")
+            # print(objs[i].near_point[i].position.x)
+            # print(objs[i].near_point[i].position.y)
+            # objs[i].velocity=hit(objs[i].mass,objs[i].interia,"agg",TwoVec(x=0,y=1,a=1),objs[i].near_point[i].position,objs[i].position,objs[i].velocity)
+            # print(objs[i].velocity.y)
+            # print(objs[i].position.a)
+            # debugging
+        # Time=0
         # time.sleep(3)
         # del ncurses
         # os._exit(0)

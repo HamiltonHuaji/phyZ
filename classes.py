@@ -143,3 +143,5 @@ def NSolve_Revar(func,value,delta,**more):
         if abs(fund(x)-x)<=abs(delta):
             print("NSolve:"+repr(n)+" times used")
             return x
+if __name__ == "__main__":
+    print(NSolve_Cut(lambda x:3*x-3,0,0))
