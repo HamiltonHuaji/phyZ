@@ -23,7 +23,8 @@ from classes import NSolve_Cut as NSolve
 from classes import TwoVec as TwoVec
 from classes import Ncurses as Ncurses
 from classes import str2bool as str2bool
-
+#https://www.jb51.net/article/49762.htm
+#about 动态变量名
 NAM=locals()
 def factory_var(x):
     def _factory_var():
@@ -298,6 +299,8 @@ argc = len(args)
 f=open(args[3],'r',encoding="utf-8")
 xml=f.read()
 f.close()
+#https://www.crummy.com/software/BeautifulSoup/bs4/doc.zh/#id9
+#about BeautifulSoup
 xml_main=BeautifulSoup(xml,"html5lib")
 screen=xml_main.screen
 x11=X11(args[1],varType(screen["width"]).var(),varType(screen["height"]).var())
@@ -309,6 +312,7 @@ objs={}
 for xml_object in xml_objects:
     objs[Read(xml_object["id"])]=Object(xml_object)
 exec(xml_main.init_value.string)
+#execute python code in a string
 for i in objs:
     objs[i].calc_position()
     objs[i].calc_velocity()
@@ -317,9 +321,9 @@ for i in objs:
 #
 # ncurses.put_string(0,0,"test")
 circle      =   0
-draw_rate   =   1000
+draw_rate   =   10000
 draw_count  =   0
-delta_t     =   0.0001
+delta_t     =   0.00001
 Time        =   0
 while True:
     circle      +=  1
@@ -335,7 +339,11 @@ while True:
                 if objs[i].near_point[p].touching==False:
                     objs[i].near_point[p].touching=True
                     objs[i].DRAW(x11)
+                    print("#")
                     print(str(objs[i].get_near_position(p).y))
+                    print(str(objs[i].get_near_velocity(p).y))
+                    #lambda is a very simple trick,lambda x:x*x is equal to a function which takes an argue x and returns value of x*x,so (lambda x:x*x)(2) is 4
+                    x11.draw_func(lambda I:hit(objs[1].mass,objs[1].interia,"agg",TwoVec(x=0,y=I,a=0),TwoVec(x=0,y=0,a=0),objs[i].position,objs[i].velocity).y,0,100)
                     objs[i].velocity=hit(objs[i].mass,objs[i].interia,"agg",TwoVec(x=0,y=NSolve(lambda iy:hit(objs[i].mass,objs[i].interia,"agg",TwoVec(x=0,y=iy,a=0),objs[i].near_point[p].position,objs[i].position,objs[i].velocity).y,-e*objs[i].get_near_velocity(p).y,0.000001),a=0),objs[i].near_point[p].position,objs[i].position,objs[i].velocity)
                     draw_rate=500
             else:

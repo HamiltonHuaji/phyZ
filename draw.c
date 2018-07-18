@@ -18,6 +18,8 @@
 Display *display;
 Window win;
 GC gc;
+//man XDrawPoint
+//about XLib
 void init_x11(int win_width,int win_height){
     display = XOpenDisplay(getenv("DISPLAY")); 
     if (display == NULL){

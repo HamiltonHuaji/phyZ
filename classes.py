@@ -1,4 +1,6 @@
 from ctypes import *
+#https://www.cnblogs.com/night-ride-depart/p/4907613.html
+#about mixing c and python
 import math
 import random
 
@@ -24,6 +26,8 @@ def str2bool(string):
         return False
 
 class TwoVec:
+#https://www.cnblogs.com/jdy113/p/8051839.html
+#about changeable argues
     def __init__(self,**xya):
         if "x" in xya:
             self.x=xya["x"]
@@ -37,6 +41,8 @@ class TwoVec:
             self.a=xya["a"]
         else:
             self.a=0
+#https://www.cnblogs.com/hotbaby/p/4913363.html
+#about rewriting operators
     def __add__(self,other):
         return TwoVec(x=self.x+other.x,y=self.y+other.y,a=self.a+other.a)
 
@@ -101,6 +107,7 @@ class Ncurses:
         self.so.end()
 #must make sure that whatever you put in func,func can return a proper value
 #and you had better wish that func(x_1) will never be equal to func(x_2) while x_1 is not equal to x_2
+#弦截法，如果看不懂就画图吧
 def NSolve_Cut(func,value,delta,**more):
     if "x_i" in more:
         x_i=more["x_i"]

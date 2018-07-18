@@ -1,7 +1,7 @@
 <init_value>
 print("In init_value")
 p_x=150.0
-p_y=100.0
+p_y=300.0
 p_a=-0.1
 v_x=10.0
 v_y=0
@@ -28,7 +28,7 @@ b=0-d
 </trigers>
 <object type="#line" id="%0" enable="$True">
 </object>
-<object type="#object" id="%1" enable="$True" moveable="$True" gravity="$True" mass="&1" interia="&10000">
+<object type="#object" id="%1" enable="$True" moveable="$True" gravity="$True" mass="&1" interia="&100">
     <position>
         <init_position>
             <x var="@p_x"></x>
